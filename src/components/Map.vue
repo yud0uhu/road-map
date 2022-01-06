@@ -65,14 +65,14 @@ export default {
   data() {
     return {
       zoom: 13,
-      center: latLng(47.41322, -1.219482),
+      center: latLng(42.8209, 141.6508),
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      withPopup: latLng(47.41322, -1.219482),
-      withTooltip: latLng(47.41422, -1.250482),
+      withPopup: latLng(42.8209, 141.6508),
+      withTooltip: latLng(42.8209, 141.6508),
       currentZoom: 11.5,
-      currentCenter: latLng(47.41322, -1.219482),
+      currentCenter: latLng(42.8209, 141.6508),
       showParagraph: false,
       mapOptions: {
         zoomSnap: 0.5,
