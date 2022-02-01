@@ -33,8 +33,22 @@
       </l-marker>
       <l-marker :lat-lng="withTooltip">
         <l-tooltip :options="{ permanent: true, interactive: true }">
-          <div @click="innerClick">
-            I am a tooltip
+          <!-- <div @click="innerClick"> -->
+          <div>
+            <v-card>
+              <v-toolbar color="pink" dark dense flat>
+                <v-toolbar-title class="text-body-2">
+                  Upcoming Changes
+                </v-toolbar-title>
+              </v-toolbar>
+              <v-card-text
+                ><input v-model="message" placeholder="edit me" />
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-icon large @click="next"> mdi-chevron-right </v-icon>
+              </v-card-actions>
+            </v-card>
             <p v-show="showParagraph">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
               sed pretium nisl, ut sagittis sapien. Sed vel sollicitudin nisi.
@@ -90,9 +104,9 @@ export default {
     showLongText() {
       this.showParagraph = !this.showParagraph;
     },
-    innerClick() {
-      alert("Click!");
-    },
+    // innerClick() {
+    //   alert("Click!");
+    // },
   },
 };
 </script>
