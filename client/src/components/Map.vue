@@ -3,9 +3,22 @@
     <div style="height: 200px; overflow: auto">
       <p>First marker is placed at {{ withPopup.lat }}, {{ withPopup.lng }}</p>
       <p>Center is at {{ currentCenter }} and the zoom is: {{ currentZoom }}</p>
-      <button @click="showLongText">Toggle long popup</button>
+      <!-- <button @click="showLongText">Toggle long popup</button> -->
       <button @click="showMap = !showMap">Toggle map</button>
     </div>
+    <input
+      type="text"
+      v-model.number="withTooltip.lat"
+      placeholder="withTooltip.lat"
+    />
+    <p>lat:{{ withTooltip.lat }}</p>
+    <input
+      type="text"
+      v-model.number="withTooltip.lng"
+      placeholder="withTooltip.lng"
+    />
+    <p>lng:{{ withTooltip.lng }}</p>
+    <v-btn @click="counterUpdate">Add memo</v-btn>
     <l-map
       ref="map"
       v-if="showMap"
@@ -17,9 +30,9 @@
       @update:zoom="zoomUpdate"
     >
       <l-tile-layer :url="url" :attribution="attribution" />
-      <l-draw-toolbar position="topright"></l-draw-toolbar>
+      <!-- <l-draw-toolbar position="topright"></l-draw-toolbar> -->
 
-      <l-marker :lat-lng="withPopup">
+      <!-- <l-marker :lat-lng="withPopup">
         <l-popup>
           <div @click="innerClick">
             I am a popup
@@ -30,15 +43,17 @@
             </p>
           </div>
         </l-popup>
-      </l-marker>
+      </l-marker> -->
       <l-marker :lat-lng="withTooltip">
-        <l-tooltip :options="{ permanent: true, interactive: true }">
-          <!-- <div @click="innerClick"> -->
+        <l-tooltip
+          :options="{ permanent: true, interactive: true }"
+          v-if="counter > 0"
+        >
           <div>
             <v-card>
               <v-toolbar color="pink" dark dense flat>
                 <v-toolbar-title class="text-body-2">
-                  Upcoming Changes
+                  Memo Space
                 </v-toolbar-title>
               </v-toolbar>
               <v-card-text
@@ -49,11 +64,6 @@
                 <v-icon large @click="next"> mdi-chevron-right </v-icon>
               </v-card-actions>
             </v-card>
-            <p v-show="showParagraph">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
-              sed pretium nisl, ut sagittis sapien. Sed vel sollicitudin nisi.
-              Donec finibus semper metus id malesuada.
-            </p>
           </div>
         </l-tooltip>
       </l-marker>
@@ -63,8 +73,8 @@
 
 <script>
 import { latLng } from "leaflet";
-import { LMap, LTileLayer, LMarker, LPopup, LTooltip } from "vue2-leaflet";
-import LDrawToolbar from "vue2-leaflet-draw-toolbar";
+import { LMap, LTileLayer, LMarker, LTooltip } from "vue2-leaflet";
+// import LDrawToolbar from "vue2-leaflet-draw-toolbar";
 
 export default {
   name: "Map",
@@ -72,9 +82,9 @@ export default {
     LMap,
     LTileLayer,
     LMarker,
-    LPopup,
+    // LPopup,
     LTooltip,
-    LDrawToolbar,
+    // LDrawToolbar,
   },
   data() {
     return {
@@ -92,6 +102,7 @@ export default {
         zoomSnap: 0.5,
       },
       showMap: true,
+      counter: 0,
     };
   },
   methods: {
@@ -101,8 +112,12 @@ export default {
     centerUpdate(center) {
       this.currentCenter = center;
     },
-    showLongText() {
-      this.showParagraph = !this.showParagraph;
+    // showLongText() {
+    //   this.showParagraph = !this.showParagraph;
+    // },
+    counterUpdate() {
+      this.counter += 1;
+      console.log("Update:" + this.counter);
     },
     // innerClick() {
     //   alert("Click!");
