@@ -51,13 +51,27 @@
         >
           <div>
             <v-card>
-              <v-toolbar color="pink" dark dense flat>
+              <v-toolbar color="orange" dark dense flat>
                 <v-toolbar-title class="text-body-2">
                   Memo Space
                 </v-toolbar-title>
               </v-toolbar>
               <v-card-text
                 ><input v-model="message" placeholder="edit me" />
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-icon large @click="next"> mdi-chevron-right </v-icon>
+              </v-card-actions>
+            </v-card>
+            <v-card>
+              <v-card-text
+                >受付番号:{{ data.order_no }}<br />
+                日付:{{ data.datatime }}<br />
+                大区分：{{ data.primary_category }}<br />
+                中区分：{{ data.secondary_category }}<br />
+                内容：{{ data.contents }}<br />
+                回答：{{ data.answer }}<br />
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -75,6 +89,7 @@
 import { latLng } from "leaflet";
 import { LMap, LTileLayer, LMarker, LTooltip } from "vue2-leaflet";
 // import LDrawToolbar from "vue2-leaflet-draw-toolbar";
+import axios from "axios";
 
 export default {
   name: "Map",
@@ -122,6 +137,19 @@ export default {
     // innerClick() {
     //   alert("Click!");
     // },
+  },
+  mounted() {
+    axios
+      .get("http://localhost:5000/ledger/123/")
+      .then((response) => {
+        this.data = response.data;
+        console.log(this.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        this.errored = true;
+      })
+      .finally(() => (this.loading = false));
   },
 };
 </script>
