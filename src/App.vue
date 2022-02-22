@@ -1,20 +1,13 @@
 <template>
-  <v-app>
-    <v-app-bar app color="black" dark>
-      <div class="d-flex align-center"></div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
-
+  <v-app id="app">
+    <NavBar />
+    <v-navigation-drawer
+      v-bind:permanent="true"
+      v-bind:fixed="true"
+      v-bind:app="true"
+    >
+      <SideMenu />
+    </v-navigation-drawer>
     <v-main>
       <Map />
     </v-main>
@@ -23,12 +16,16 @@
 
 <script>
 import Map from "./components/Map";
+import NavBar from "./components/NavBar.vue";
+import SideMenu from "./components/SideMenu.vue";
 
 export default {
   name: "App",
 
   components: {
     Map,
+    SideMenu,
+    NavBar,
   },
 
   data: () => ({

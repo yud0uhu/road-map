@@ -1,7 +1,5 @@
 <template>
   <div style="height: 100%; width: 100%">
-    <SideMenu />
-
     <v-btn @click="counterUpdate">Add memo</v-btn>
     <l-map
       ref="map"
@@ -12,8 +10,7 @@
       style="height: 100%"
       @update:center="centerUpdate"
       @update:zoom="zoomUpdate"
-      :z-index="999"
-      ><ToolBar />
+    >
       <l-tile-layer :url="url" :attribution="attribution" />
       <l-marker :lat-lng="withTooltip">
         <l-tooltip
@@ -61,9 +58,8 @@ import { latLng } from "leaflet";
 import { LMap, LTileLayer, LMarker, LTooltip } from "vue2-leaflet";
 // import LDrawToolbar from "vue2-leaflet-draw-toolbar";
 import axios from "axios";
-import ToolBar from "./ToolBar";
-import SideMenu from "./SideMenu";
-
+// import ToolBar from "./ToolBar";
+// import SideMenu from "./SideMenu";
 export default {
   name: "Map",
   components: {
@@ -73,8 +69,8 @@ export default {
     // LPopup,
     LTooltip,
     // LDrawToolbar,
-    ToolBar,
-    SideMenu,
+    // ToolBar,
+    // SideMenu,
   },
   data() {
     return {
