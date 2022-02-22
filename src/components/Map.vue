@@ -1,23 +1,7 @@
 <template>
-  <div style="height: 500px; width: 100%">
-    <div style="height: 200px; overflow: auto">
-      <p>First marker is placed at {{ withPopup.lat }}, {{ withPopup.lng }}</p>
-      <p>Center is at {{ currentCenter }} and the zoom is: {{ currentZoom }}</p>
-      <!-- <button @click="showLongText">Toggle long popup</button> -->
-      <button @click="showMap = !showMap">Toggle map</button>
-    </div>
-    <input
-      type="text"
-      v-model.number="withTooltip.lat"
-      placeholder="withTooltip.lat"
-    />
-    <p>lat:{{ withTooltip.lat }}</p>
-    <input
-      type="text"
-      v-model.number="withTooltip.lng"
-      placeholder="withTooltip.lng"
-    />
-    <p>lng:{{ withTooltip.lng }}</p>
+  <div style="height: 100%; width: 100%">
+    <SideMenu />
+
     <v-btn @click="counterUpdate">Add memo</v-btn>
     <l-map
       ref="map"
@@ -25,25 +9,12 @@
       :zoom="zoom"
       :center="center"
       :options="mapOptions"
-      style="height: 80%"
+      style="height: 100%"
       @update:center="centerUpdate"
       @update:zoom="zoomUpdate"
-    >
+      :z-index="999"
+      ><ToolBar />
       <l-tile-layer :url="url" :attribution="attribution" />
-      <!-- <l-draw-toolbar position="topright"></l-draw-toolbar> -->
-
-      <!-- <l-marker :lat-lng="withPopup">
-        <l-popup>
-          <div @click="innerClick">
-            I am a popup
-            <p v-show="showParagraph">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
-              sed pretium nisl, ut sagittis sapien. Sed vel sollicitudin nisi.
-              Donec finibus semper metus id malesuada.
-            </p>
-          </div>
-        </l-popup>
-      </l-marker> -->
       <l-marker :lat-lng="withTooltip">
         <l-tooltip
           :options="{ permanent: true, interactive: true }"
@@ -90,6 +61,8 @@ import { latLng } from "leaflet";
 import { LMap, LTileLayer, LMarker, LTooltip } from "vue2-leaflet";
 // import LDrawToolbar from "vue2-leaflet-draw-toolbar";
 import axios from "axios";
+import ToolBar from "./ToolBar";
+import SideMenu from "./SideMenu";
 
 export default {
   name: "Map",
@@ -100,6 +73,8 @@ export default {
     // LPopup,
     LTooltip,
     // LDrawToolbar,
+    ToolBar,
+    SideMenu,
   },
   data() {
     return {
@@ -140,7 +115,7 @@ export default {
   },
   mounted() {
     axios
-      .get("http://localhost:5000/ledger/123/")
+      .get("https://road-map-analyze.herokuapp.com/ledger/12/")
       .then((response) => {
         this.data = response.data;
         console.log(this.data);
