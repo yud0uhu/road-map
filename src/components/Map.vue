@@ -1,6 +1,17 @@
 <template>
   <div style="height: 100%; width: 100%">
-    <v-btn @click="counterUpdate">Add memo</v-btn>
+    <!-- <v-col cols="ledgers.length"> -->
+    <!-- <v-select
+        :items="ledgers[i].order_no"
+        menu-props="auto"
+        label="Select"
+        hide-details
+        prepend-icon="mdi-map"
+        single-line
+      ></v-select> -->
+    <v-btn @click="onMapView()">button</v-btn>
+    {{ ledgers.length }}
+    <!-- </v-col> -->
     <l-map
       ref="map"
       v-if="showMap"
@@ -12,11 +23,13 @@
       @update:zoom="zoomUpdate"
     >
       <l-tile-layer :url="url" :attribution="attribution" />
-      <l-marker :lat-lng="withTooltip">
-        <l-tooltip
-          :options="{ permanent: true, interactive: true }"
-          v-if="counter > 0"
-        >
+
+      <l-marker
+        v-for="ledger in ledgers"
+        :key="ledger.order_no"
+        :lat-lng="markerLatLng"
+      >
+        <l-tooltip :options="{ permanent: true, interactive: true }">
           <div>
             <v-card>
               <v-toolbar color="orange" dark dense flat>
@@ -24,26 +37,24 @@
                   Memo Space
                 </v-toolbar-title>
               </v-toolbar>
-              <v-card-text
-                ><input v-model="message" placeholder="edit me" />
-              </v-card-text>
+              <v-card-text><input placeholder="edit me" /> </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-icon large @click="next"> mdi-chevron-right </v-icon>
+                <v-icon large> mdi-chevron-right </v-icon>
               </v-card-actions>
             </v-card>
             <v-card>
               <v-card-text
-                >受付番号:{{ data.order_no }}<br />
-                日付:{{ data.datatime }}<br />
-                大区分：{{ data.primary_category }}<br />
-                中区分：{{ data.secondary_category }}<br />
-                内容：{{ data.contents }}<br />
-                回答：{{ data.answer }}<br />
+                >受付番号:{{ ledger.order_no }}<br />
+                日付:{{ ledger.datatime }}<br />
+                大区分：{{ ledger.primary_category }}<br />
+                中区分：{{ ledger.secondary_category }}<br />
+                内容：{{ ledger.contents }}<br />
+                回答：{{ ledger.answer }}<br />
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-icon large @click="next"> mdi-chevron-right </v-icon>
+                <v-icon large> mdi-chevron-right </v-icon>
               </v-card-actions>
             </v-card>
           </div>
@@ -74,13 +85,21 @@ export default {
   },
   data() {
     return {
+      ledgers: [
+        {
+          // order_no: "",
+          // datatime: "",
+          // primary_category: "",
+          // secondary_category: "",
+          // contents: "",
+        },
+      ],
       zoom: 13,
       center: latLng(42.8209, 141.6508),
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      withPopup: latLng(42.8209, 141.6508),
-      withTooltip: latLng(42.8209, 141.6508),
+      markerLatLng: [42.8209, 141.6508],
       currentZoom: 11.5,
       currentCenter: latLng(42.8209, 141.6508),
       showParagraph: false,
@@ -98,29 +117,28 @@ export default {
     centerUpdate(center) {
       this.currentCenter = center;
     },
-    // showLongText() {
-    //   this.showParagraph = !this.showParagraph;
-    // },
-    counterUpdate() {
-      this.counter += 1;
-      console.log("Update:" + this.counter);
+    onMapView() {
+      for (var i = 0; i <= 20; i++) {
+        axios
+          .get(`https://road-map-analyze.herokuapp.com/ledger/${i}/`)
+          .then((response) => {
+            this.ledgers.push({
+              order_no: response.data.order_no,
+              datatime: response.data.datatime,
+              primary_category: response.data.primary_category,
+              secondary_category: response.data.secondary_categorye,
+              contents: response.data.contents,
+              answer: response.data.answer,
+            });
+            console.log(this.ledgers);
+          })
+          .catch((error) => {
+            console.log(error);
+            this.errored = true;
+          })
+          .finally(() => (this.loading = false));
+      }
     },
-    // innerClick() {
-    //   alert("Click!");
-    // },
-  },
-  mounted() {
-    axios
-      .get("https://road-map-analyze.herokuapp.com/ledger/12/")
-      .then((response) => {
-        this.data = response.data;
-        console.log(this.data);
-      })
-      .catch((error) => {
-        console.log(error);
-        this.errored = true;
-      })
-      .finally(() => (this.loading = false));
   },
 };
 </script>
