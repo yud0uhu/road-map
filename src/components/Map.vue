@@ -9,7 +9,7 @@
         prepend-icon="mdi-map"
         single-line
       ></v-select> -->
-    <v-btn @click="onMapView()">button</v-btn>
+    <v-btn @click="onMapView()" markerLatLng>button</v-btn>
     {{ ledgers.length }}
     <!-- </v-col> -->
     <l-map
@@ -27,7 +27,7 @@
       <l-marker
         v-for="ledger in ledgers"
         :key="ledger.order_no"
-        :lat-lng="markerLatLng"
+        :lat-lng="[ledger.lat, ledger.lng]"
       >
         <l-tooltip :options="{ permanent: true, interactive: true }">
           <div>
@@ -99,9 +99,9 @@ export default {
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      markerLatLng: [42.8209, 141.6508],
-      currentZoom: 11.5,
-      currentCenter: latLng(42.8209, 141.6508),
+      // markerLatLng: [42.8209, 141.6508],
+      // currentZoom: 11.5,
+      // currentCenter: latLng(42.8209, 141.6508),
       showParagraph: false,
       mapOptions: {
         zoomSnap: 0.5,
@@ -129,6 +129,8 @@ export default {
               secondary_category: response.data.secondary_categorye,
               contents: response.data.contents,
               answer: response.data.answer,
+              lat: 42.8209,
+              lng: 141.6508,
             });
             console.log(this.ledgers);
           })
