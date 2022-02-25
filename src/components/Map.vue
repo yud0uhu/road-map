@@ -1,17 +1,5 @@
 <template>
   <div style="height: 100%; width: 100%">
-    <!-- <v-col cols="ledgers.length"> -->
-    <!-- <v-select
-        :items="ledgers[i].order_no"
-        menu-props="auto"
-        label="Select"
-        hide-details
-        prepend-icon="mdi-map"
-        single-line
-      ></v-select> -->
-    <v-btn @click="onMapView()" v-if="onView == false">button</v-btn>
-    {{ ledgers.length }}
-    <!-- </v-col> -->
     <l-map
       ref="map"
       v-if="showMap"
@@ -22,40 +10,38 @@
       @update:center="centerUpdate"
       @update:zoom="zoomUpdate"
     >
+      <v-navigation-drawer
+        v-bind:permanent="true"
+        v-bind:fixed="true"
+        v-bind:app="true"
+      >
+        <SideMenu @onMapView="onMapView" />
+      </v-navigation-drawer>
       <l-tile-layer :url="url" :attribution="attribution" />
       <div v-for="ledger in ledgers" :key="ledger.order_no">
+        {{ ledgers.length }}
+        <!-- </v-col> -->
         <!-- TIPS:lat-lngは配列の第一要素、第二要素を緯度、経度とし直接渡すことができる -->
         <l-marker :lat-lng="markerLatLng">
           <l-tooltip :options="{ permanent: true, interactive: true }">
             <!-- ポップアップメニュー -->
-            <!-- <div>
+            <div>
+              <v-card> </v-card>
               <v-card>
-                <v-toolbar color="orange" dark dense flat>
-                  <v-toolbar-title class="text-body-2">
-                    Memo Space
-                  </v-toolbar-title>
-                </v-toolbar>
-                <v-card-text><input placeholder="edit me" /> </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-icon large> mdi-chevron-right </v-icon>
-                </v-card-actions>
-              </v-card>
-              <v-card>
-                <v-card-text
-                  >受付番号:{{ ledger.order_no }}<br />
-                  日付:{{ ledger.datatime }}<br />
-                  大区分：{{ ledger.primary_category }}<br />
-                  中区分：{{ ledger.secondary_category }}<br />
-                  内容：{{ ledger.contents }}<br />
-                  回答：{{ ledger.answer }}<br />
+                <v-card-text>
+                  <!-- {{ ledger.order_no }}<br /> -->
+                  {{ ledger.datatime }}<br />
+                  {{ ledger.primary_category }}<br />
+                  {{ ledger.secondary_category }}<br />
+                  <!-- {{ ledger.contents }}<br /> -->
+                  <!-- {{ ledger.answer }}<br /> -->
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-icon large> mdi-chevron-right </v-icon>
                 </v-card-actions>
               </v-card>
-            </div> -->
+            </div>
           </l-tooltip>
         </l-marker>
       </div>
@@ -68,6 +54,7 @@ import { latLng } from "leaflet";
 import { LMap, LTileLayer, LMarker, LTooltip } from "vue2-leaflet";
 // import LDrawToolbar from "vue2-leaflet-draw-toolbar";
 import axios from "axios";
+import SideMenu from "./SideMenu.vue";
 export default {
   name: "Map",
   components: {
@@ -75,6 +62,7 @@ export default {
     LTileLayer,
     LMarker,
     LTooltip,
+    SideMenu,
   },
   data() {
     return {
@@ -89,8 +77,6 @@ export default {
           // lng: 141.6508,
         },
       ],
-      // lat: 42.8209,
-      // lng: 141.6508,
       zoom: 13,
       center: latLng(42.8209, 141.6508),
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -121,8 +107,8 @@ export default {
     },
     // markerLatLngを引数で受け取った値に更新
     latLngUpdate(lat, lng) {
-      this.markerLatLng[0] += lat * 0.1;
-      this.markerLatLng[1] -= lng * 0.1;
+      this.markerLatLng[0] += lat * 0.1 + 0.1;
+      this.markerLatLng[1] -= lng * 0.1 - 0.1;
       console.log(this.markerLatLng);
     },
     onMapView(onView) {
