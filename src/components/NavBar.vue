@@ -8,3 +8,18 @@
     </v-btn>
   </v-app-bar>
 </template>
+<script>
+export default {
+  components: {},
+  data: () => ({
+    drawer: false,
+    group: null,
+  }),
+
+  watch: {
+    group() {
+      this.drawer = false;
+    },
+  },
+};
+</script>

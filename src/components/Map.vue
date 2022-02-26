@@ -1,6 +1,11 @@
 <template>
   <div style="height: 100%; width: 100%">
-    {{ ledgers.length }}
+    <!-- {{ ledgers.length }} -->
+    <v-card class="mx-auto overflow-hidden">
+      <NavBar />
+      <side-menu @onMapView="onMapView" :ledgers="ledgers" />
+    </v-card>
+    <v-card class="overflow-hidden"> </v-card>
     <l-map
       ref="map"
       v-if="showMap"
@@ -12,7 +17,7 @@
       @update:zoom="zoomUpdate"
     >
       <l-tile-layer :url="url" :attribution="attribution" />
-      <SideMenu @onMapView="onMapView" :ledgers="ledgers" />
+
       <div v-for="ledger in ledgers" :key="ledger.order_no">
         <!-- </v-col> -->
         <!-- TIPS:lat-lngは配列の第一要素、第二要素を緯度、経度とし直接渡すことができる -->
@@ -45,6 +50,7 @@ import { latLng } from "leaflet";
 import { LMap, LTileLayer, LMarker, LPopup } from "vue2-leaflet";
 // import LDrawToolbar from "vue2-leaflet-draw-toolbar";
 import axios from "axios";
+import NavBar from "./NavBar.vue";
 import SideMenu from "./SideMenu.vue";
 export default {
   name: "Map",
@@ -52,11 +58,13 @@ export default {
     LMap,
     LTileLayer,
     LMarker,
-    SideMenu,
     LPopup,
+    NavBar,
+    SideMenu,
   },
   data() {
     return {
+      collapseOnScroll: true,
       ledgers: [],
       zoom: 13,
       center: latLng(42.8209, 141.6508),
