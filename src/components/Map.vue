@@ -1,5 +1,6 @@
 <template>
   <div style="height: 100%; width: 100%">
+    {{ ledgers.length }}
     <l-map
       ref="map"
       v-if="showMap"
@@ -10,32 +11,29 @@
       @update:center="centerUpdate"
       @update:zoom="zoomUpdate"
     >
-      <SideMenu @onMapView="onMapView" />
       <l-tile-layer :url="url" :attribution="attribution" />
+      <SideMenu @onMapView="onMapView" :ledgers="ledgers" />
       <div v-for="ledger in ledgers" :key="ledger.order_no">
-        {{ ledgers.length }}
         <!-- </v-col> -->
         <!-- TIPS:lat-lngは配列の第一要素、第二要素を緯度、経度とし直接渡すことができる -->
         <l-marker :lat-lng="markerLatLng">
-          <l-tooltip :options="{ permanent: true, interactive: true }">
+          <l-popup>
             <!-- ポップアップメニュー -->
-            <div>
-              <v-card>
-                <v-card-text>
-                  <!-- {{ ledger.order_no }}<br /> -->
-                  {{ ledger.datatime }}<br />
-                  {{ ledger.primary_category }}<br />
-                  {{ ledger.secondary_category }}<br />
-                  <!-- {{ ledger.contents }}<br /> -->
-                  <!-- {{ ledger.answer }}<br /> -->
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-icon large> mdi-chevron-right </v-icon>
-                </v-card-actions>
-              </v-card>
-            </div>
-          </l-tooltip>
+            <!-- <v-card>
+              <v-card-text> -->
+            <!-- {{ ledger.order_no }}<br /> -->
+            {{ ledger.datatime }}<br />
+            {{ ledger.primary_category }}<br />
+            {{ ledger.secondary_category }}<br />
+            {{ ledger.contents }}<br />
+            {{ ledger.answer }}<br />
+            <!-- </v-card-text> -->
+            <!-- <v-card-actions> -->
+            <!-- <v-spacer></v-spacer> -->
+            <!-- <v-icon large> mdi-chevron-right </v-icon> -->
+            <!-- </v-card-actions> -->
+            <!-- </v-card> -->
+          </l-popup>
         </l-marker>
       </div>
     </l-map>
@@ -44,7 +42,7 @@
 
 <script>
 import { latLng } from "leaflet";
-import { LMap, LTileLayer, LMarker, LTooltip } from "vue2-leaflet";
+import { LMap, LTileLayer, LMarker, LPopup } from "vue2-leaflet";
 // import LDrawToolbar from "vue2-leaflet-draw-toolbar";
 import axios from "axios";
 import SideMenu from "./SideMenu.vue";
@@ -54,22 +52,12 @@ export default {
     LMap,
     LTileLayer,
     LMarker,
-    LTooltip,
     SideMenu,
+    LPopup,
   },
   data() {
     return {
-      ledgers: [
-        {
-          // order_no: "",
-          // datatime: "",
-          // primary_category: "",
-          // secondary_category: "",
-          // contents: "",
-          // lat: 42.8209,
-          // lng: 141.6508,
-        },
-      ],
+      ledgers: [],
       zoom: 13,
       center: latLng(42.8209, 141.6508),
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -84,8 +72,6 @@ export default {
       },
       showMap: true,
       counter: 0,
-      // 初期値は非表示
-      onView: false,
     };
   },
   methods: {
@@ -95,16 +81,14 @@ export default {
     centerUpdate(center) {
       this.currentCenter = center;
     },
-    onViewMode(onView) {
-      this.onView = !onView;
-    },
+
     // markerLatLngを引数で受け取った値に更新
     latLngUpdate(lat, lng) {
       this.markerLatLng[0] += lat * 0.1 + 0.1;
       this.markerLatLng[1] -= lng * 0.1 - 0.1;
       console.log(this.markerLatLng);
     },
-    onMapView(onView) {
+    onMapView() {
       for (var i = 1; i <= 20; i++) {
         axios
           .get(`https://road-map-analyze.herokuapp.com/ledger/${i}/`)
@@ -118,8 +102,6 @@ export default {
               answer: response.data.answer,
             });
             console.log(this.ledgers);
-            // Triger切り替え
-            this.onViewMode(onView);
             // TODO: lat/lngは毎回一意の値にしたい
             // ここで更新したい一意の値を渡す
             this.latLngUpdate(0.1, 0.1);
