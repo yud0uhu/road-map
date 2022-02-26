@@ -5,50 +5,19 @@
       v-bind:fixed="true"
       v-bind:app="true"
     >
-      <v-treeview :items="items"></v-treeview>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="text-h6">
-            施設区分を設定する
+            検索条件を指定する
           </v-list-item-title>
           <!-- <v-list-item-subtitle> subtext </v-list-item-subtitle> -->
         </v-list-item-content>
       </v-list-item>
-      <!-- {{ ledgers.order_no }} -->
+      <!-- {{ ledgers }} -->
       <v-divider></v-divider>
-
-      <v-row align="center">
-        <v-col cols="6">
-          <v-subheader> 設備区分を選択する </v-subheader>
-          <!-- <p>{{ ledgers }}</p> -->
-        </v-col>
-        <v-col cols="6">
-          <v-select
-            v-model="e1"
-            :items="states"
-            menu-props="auto"
-            label="Select"
-            hide-details
-            prepend-icon="mdi-map"
-            single-line
-          ></v-select>
-        </v-col>
-        <v-col cols="6">
-          <v-subheader> 日付を選択する </v-subheader>
-        </v-col>
-        <v-col cols="6">
-          <v-select
-            v-model="e2"
-            :items="states"
-            menu-props="auto"
-            label="Select"
-            hide-details
-            prepend-icon="mdi-calendar"
-            single-line
-          ></v-select>
-        </v-col>
-      </v-row>
+      <v-treeview :items="items"></v-treeview>
       <v-row justify="center">
+        <!-- ボタンが発火されたタイミングでAPIからデータを取得する -->
         <v-btn v-on:click="$emit('onMapView')">検索する</v-btn>
       </v-row>
     </v-navigation-drawer>
@@ -60,73 +29,60 @@ export default {
   props: ["ledgers"],
   data() {
     return {
-      right: null,
-      e1: "Alabama",
-      e2: "Texas",
-      e3: null,
-      e4: null,
-      states: [
-        "Alabama",
-        "Alaska",
-        "American Samoa",
-        "Arizona",
-        "Arkansas",
-        "California",
-        "Colorado",
-        "Connecticut",
-        "Delaware",
-        "District of Columbia",
-        "Federated States of Micronesia",
-        "Florida",
-        "Georgia",
-        "Guam",
-        "Hawaii",
-        "Idaho",
-        "Illinois",
-        "Indiana",
-        "Iowa",
-        "Kansas",
-        "Kentucky",
-        "Louisiana",
-        "Maine",
-        "Marshall Islands",
-        "Maryland",
-        "Massachusetts",
-        "Michigan",
-        "Minnesota",
-        "Mississippi",
-        "Missouri",
-        "Montana",
-        "Nebraska",
-        "Nevada",
-        "New Hampshire",
-        "New Jersey",
-        "New Mexico",
-        "New York",
-        "North Carolina",
-        "North Dakota",
-        "Northern Mariana Islands",
-        "Ohio",
-        "Oklahoma",
-        "Oregon",
-        "Palau",
-        "Pennsylvania",
-        "Puerto Rico",
-        "Rhode Island",
-        "South Carolina",
-        "South Dakota",
-        "Tennessee",
-        "Texas",
-        "Utah",
-        "Vermont",
-        "Virgin Island",
-        "Virginia",
-        "Washington",
-        "West Virginia",
-        "Wisconsin",
-        "Wyoming",
+      // 初期値は非表示
+      // onView: false,
+      items: [
+        {
+          id: 1,
+          name: "施設区分 :",
+          children: [
+            { id: 2, name: "Calendar : app" },
+            { id: 3, name: "Chrome : app" },
+            { id: 4, name: "Webstorm : app" },
+          ],
+        },
+        {
+          id: 5,
+          name: "設備状況 :",
+          children: [
+            {
+              id: 6,
+              name: "vuetify :",
+              children: [
+                {
+                  id: 7,
+                  name: "src :",
+                  children: [
+                    { id: 8, name: "index : ts" },
+                    { id: 9, name: "bootstrap : ts" },
+                  ],
+                },
+              ],
+            },
+            {
+              id: 10,
+              name: "material2 :",
+              children: [
+                {
+                  id: 11,
+                  name: "src :",
+                  children: [
+                    { id: 12, name: "v-btn : ts" },
+                    { id: 13, name: "v-card : ts" },
+                    { id: 14, name: "v-window : ts" },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
       ],
     };
+  },
+  methods: {
+    // onViewMode() {
+    //   this.onView = !this.onView;
+    // },
   },
 };
 </script>
