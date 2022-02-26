@@ -1,10 +1,15 @@
 <template>
   <v-card height="100%" width="256" class="mx-left">
-    <v-navigation-drawer permanent>
+    <v-navigation-drawer
+      v-bind:permanent="true"
+      v-bind:fixed="true"
+      v-bind:app="true"
+    >
+      <v-treeview :items="items"></v-treeview>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="text-h6">
-            検索条件を設定する
+            施設区分を設定する
           </v-list-item-title>
           <!-- <v-list-item-subtitle> subtext </v-list-item-subtitle> -->
         </v-list-item-content>
@@ -14,7 +19,7 @@
 
       <v-row align="center">
         <v-col cols="6">
-          <v-subheader> 区分を選択する </v-subheader>
+          <v-subheader> 設備区分を選択する </v-subheader>
           <!-- <p>{{ ledgers }}</p> -->
         </v-col>
         <v-col cols="6">

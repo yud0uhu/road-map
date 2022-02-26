@@ -10,13 +10,7 @@
       @update:center="centerUpdate"
       @update:zoom="zoomUpdate"
     >
-      <v-navigation-drawer
-        v-bind:permanent="true"
-        v-bind:fixed="true"
-        v-bind:app="true"
-      >
-        <SideMenu @onMapView="onMapView" />
-      </v-navigation-drawer>
+      <SideMenu @onMapView="onMapView" />
       <l-tile-layer :url="url" :attribution="attribution" />
       <div v-for="ledger in ledgers" :key="ledger.order_no">
         {{ ledgers.length }}
@@ -26,7 +20,6 @@
           <l-tooltip :options="{ permanent: true, interactive: true }">
             <!-- ポップアップメニュー -->
             <div>
-              <v-card> </v-card>
               <v-card>
                 <v-card-text>
                   <!-- {{ ledger.order_no }}<br /> -->
