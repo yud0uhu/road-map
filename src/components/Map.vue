@@ -64,6 +64,8 @@ export default {
   },
   data() {
     return {
+      latitude: 0,
+      longitud: 0,
       collapseOnScroll: true,
       ledgers: [],
       zoom: 13,
@@ -92,8 +94,8 @@ export default {
 
     // markerLatLngを引数で受け取った値に更新
     latLngUpdate(lat, lng) {
-      this.markerLatLng[0] += lat * 0.1 + 0.1;
-      this.markerLatLng[1] -= lng * 0.1 - 0.1;
+      this.markerLatLng[0] = lat;
+      this.markerLatLng[1] = lng;
       console.log(this.markerLatLng);
     },
     onMapView() {
@@ -108,11 +110,16 @@ export default {
               secondary_category: response.data.secondary_categorye,
               contents: response.data.contents,
               answer: response.data.answer,
+              latitude: response.data.latitude,
+              longitud: response.data.longitud,
             });
-            console.log(this.ledgers);
+            // console.log(response.data.latitude, response.data.longitud);
+            this.latitude = response.data.latitude;
+            this.longitud = response.data.longitud;
+            console.log(this.latitude, this.longitud);
             // TODO: lat/lngは毎回一意の値にしたい
             // ここで更新したい一意の値を渡す
-            this.latLngUpdate(0.1, 0.1);
+            this.latLngUpdate(this.latitude, this.longitud);
           })
           .catch((error) => {
             console.log(error);
